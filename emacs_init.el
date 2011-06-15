@@ -1,4 +1,5 @@
 (set-cursor-color 'red)
+(require 'rvm)
 
 (add-to-list 'load-path "~/new_emacs")
 (add-to-list 'load-path "~/new_emacs/assorted")
@@ -60,6 +61,7 @@
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
 ;;(load "17rsense.el")
+(rvm-use-default)
 
 (server-start)
 
