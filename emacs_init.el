@@ -1,5 +1,4 @@
-(set-cursor-color 'red)
-(require 'rvm)
+(set-cursor-color "red")
 
 (add-to-list 'load-path "~/new_emacs")
 (add-to-list 'load-path "~/new_emacs/assorted")
@@ -13,7 +12,7 @@
 (add-to-list 'load-path "~/new_emacs/markdown-mode/")
 (add-to-list 'load-path "~/new_emacs/color-theme/")
 (add-to-list 'load-path "~/new_emacs/auto_complete_install")
-(add-to-list 'load-path "~/new_emacs/rvm/")
+(add-to-list 'load-path "~/new_emacs/rvm.el/")
 (add-to-list 'load-path "~/new_emacs/cucumber/")
 (add-to-list 'load-path "~/new_emacs/rspec-mode/")
 (add-to-list 'load-path "~/new_emacs/coffee-mode/")
@@ -61,7 +60,6 @@
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
 ;;(load "17rsense.el")
-(rvm-use-default)
 
 (server-start)
 
