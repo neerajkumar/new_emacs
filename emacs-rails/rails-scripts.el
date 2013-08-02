@@ -314,10 +314,10 @@ BUFFER-MAJOR-MODE and process-sentinel SENTINEL."
    (rails-minor-mode t)))
 
 (defun rails-script:console ()
-  "Run script/console."
+  "Run script/rails c"
   (interactive)
   (rails-script:run-interactive (format "console at (%s)" rails-default-environment)
-                                "script/console"
+                                "script/rails"
                                  rails-default-environment))
 
 (defun rails-script:breakpointer ()

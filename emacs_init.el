@@ -22,6 +22,7 @@
 (load "00setup.el")
 (load "01org-mode.el")
 (load "02ruby-mode.el")
+(push "/usr/local/bin" exec-path)
 
 ;;(load "03html-mode.el")
 
@@ -57,6 +58,14 @@
 (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
 
 (autoload 'js2-mode "js2" nil t)
+
+(setq ispell-program-name "/usr/local/bin/aspell")
+;;(setq flyspell-issue-welcome-flag nil) ;; fix flyspell problem
+(autoload 'flyspell-mode "flyspell-1.7p" "On-the-fly spelling checker." t)
+(autoload 'flyspell-delay-command "flyspell" "Delay on command." t) 
+(autoload 'tex-mode-flyspell-verify "flyspell" "" t) 
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
 ;;(load "17rsense.el")
