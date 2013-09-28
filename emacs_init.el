@@ -1,4 +1,5 @@
 (set-cursor-color "red")
+;;(require "rvm")
 
 (add-to-list 'load-path "~/new_emacs")
 (add-to-list 'load-path "~/new_emacs/assorted")
@@ -17,11 +18,14 @@
 (add-to-list 'load-path "~/new_emacs/rspec-mode/")
 (add-to-list 'load-path "~/new_emacs/coffee-mode/")
 (add-to-list 'load-path "~/new_emacs/sass-mode/")
+(add-to-list 'load-path "~/new_emacs/scss-mode/")
+(add-to-list 'load-path "~/new_emacs/nodejs-repl.el/")
 
 (load "load_vars.el")
 (load "00setup.el")
 (load "01org-mode.el")
 (load "02ruby-mode.el")
+(load "rtf-mode.el")
 (push "/usr/local/bin" exec-path)
 
 ;;(load "03html-mode.el")
@@ -44,12 +48,14 @@
 (load "19haml-mode.el")
 (load "20rvm.el")
 (load "21coffee.el")
-(load "22sass.el")
+;;(load "22sass.el")
 (load "23mustache.el")
+(load "24scss.el")
 
 (require 'ack)
 (require 'feature-mode)
 (require 'rspec-mode)
+(require 'nodejs-repl)
 (setq rspec-use-rvm t)
 (setq rspec-use-rake-flag nil)
 (setq rspec-spec-command "bundle exec rspec")
@@ -69,6 +75,10 @@
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
 ;;(load "17rsense.el")
+
+;;(rvm-use-default)
+(rvm-use "ree-1.8.7-2012.02" "global") 
+(toggle-debug-on-error)
 
 (server-start)
 

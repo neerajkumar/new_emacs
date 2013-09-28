@@ -172,8 +172,8 @@ Used when it's determined that the output buffer needs to be shown."
                    (list file param)
                  (list file))))
 ;;    "(rails-script:run "/opt/ruby-enterprise-1.8.7-2010.02/bin/ruby" param 'rails-test:compilation-mode)))"
-    "(rails-script:run "/Users/neeraj/.rvm/rubies/ruby-1.8.7-p370/bin/ruby" param 'rails-test:compilation-mode)))"
-    (rails-script:run "/Users/gaurav/.rvm/rubies/ruby-1.8.7-p334/bin/ruby" param 'rails-test:compilation-mode)))
+    (rails-script:run "/Users/neeraj/.rvm/rubies/ruby-1.8.7-p370/bin/ruby" param 'rails-test:compilation-mode)))
+;;    (rails-script:run "/Users/gaurav/.rvm/rubies/ruby-1.8.7-p334/bin/ruby" param 'rails-test:compilation-mode)))
 
 (defun rails-test:run-current ()
   "Run a test for the current controller/model/mailer."
