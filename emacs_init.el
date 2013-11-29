@@ -21,6 +21,11 @@
 (add-to-list 'load-path "~/new_emacs/sass-mode/")
 (add-to-list 'load-path "~/new_emacs/scss-mode/")
 (add-to-list 'load-path "~/new_emacs/nodejs-repl.el/")
+(add-to-list 'load-path "~/new_emacs/jade-mode/")
+(require 'sws-mode)
+(require 'jade-mode)    
+(add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
+(add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
 (load "load_vars.el")
 (load "00setup.el")
