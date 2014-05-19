@@ -17,10 +17,10 @@
 ;; y/n instead of yes/no
 (defalias 'yes-or-no-p 'y-or-n-p)              
 
-(set-cursor-color "keyboardFocusIndicatorColor")
+;;(set-cursor-color "keyboardFocusIndicatorColor")
 
-(setq default-frame-alist
-      '((cursor-color . "keyboardFocusIndicatorColor")))
+;;(setq default-frame-alist
+;;      '((cursor-color . "keyboardFocusIndicatorColor")))
 
 ;; Highlight incremental search
 (setq search-highlight t)

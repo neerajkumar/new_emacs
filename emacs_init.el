@@ -24,6 +24,9 @@
 (add-to-list 'load-path "~/new_emacs/jade-mode/")
 (require 'sws-mode)
 (require 'jade-mode)    
+(require 'tail)
+(autoload 'tail-file "~/new_emacs/tail.el" "Tail a file." t)
+(autoload 'tail-command "~/new_emacs/tail.el" "Tail a file with arguments." t)
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
 (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
