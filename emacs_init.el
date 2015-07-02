@@ -71,6 +71,9 @@
 (setq rspec-use-rvm t)
 (setq rspec-use-rake-flag nil)
 (setq rspec-spec-command "bundle exec rspec")
+
+(setq projectile-rails-add-keywords nil)
+
 (require 'hide-comnt)
 
 (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
@@ -83,6 +86,21 @@
 (autoload 'flyspell-delay-command "flyspell" "Delay on command." t) 
 (autoload 'tex-mode-flyspell-verify "flyspell" "" t) 
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'projectile-mode-hook 'projectile-rails-on)
+
+
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
+(el-get 'sync)
+
 
 ;;(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
