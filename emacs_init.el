@@ -22,6 +22,7 @@
 (add-to-list 'load-path "~/new_emacs/scss-mode/")
 (add-to-list 'load-path "~/new_emacs/nodejs-repl.el/")
 (add-to-list 'load-path "~/new_emacs/jade-mode/")
+(add-to-list 'load-path "~/new_emacs/cedet-1.1/")
 (require 'sws-mode)
 (require 'jade-mode)    
 (require 'tail)
@@ -74,7 +75,7 @@
 
 (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
 
-(autoload 'js2-mode "js2" nil t)
+;;(autoload 'js2-mode "js2" nil t)
 
 (setq ispell-program-name "/usr/local/bin/aspell")
 ;;(setq flyspell-issue-welcome-flag nil) ;; fix flyspell problem
@@ -83,7 +84,7 @@
 (autoload 'tex-mode-flyspell-verify "flyspell" "" t) 
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+;;(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
 ;;(load "17rsense.el")
 
@@ -97,19 +98,25 @@
 
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(ac-candidate-limit 5)
  '(ac-menu-height 5)
- '(ac-sources (quote (ac-source-yasnippet ac-source-imenu ac-source-abbrev ac-source-words-in-buffer ac-source-files-in-current-dir ac-source-filename)) t)
+ '(ac-sources
+   (quote
+    (ac-source-yasnippet ac-source-imenu ac-source-abbrev ac-source-words-in-buffer ac-source-files-in-current-dir ac-source-filename)) t)
  '(display-time-mode t)
- '(ecb-layout-window-sizes (quote (("code4" (0.24 . 0.6666666666666666) (0.24 . 0.3111111111111111)) ("fav2" (0.22772277227722773 . 0.49056603773584906) (0.22772277227722773 . 0.49056603773584906)) ("fav" (0.2057142857142857 . 0.4888888888888889) (0.2057142857142857 . 0.4888888888888889)) ("left3" (0.21910112359550563 . 0.2765957446808511) (0.21910112359550563 . 0.3404255319148936) (0.21910112359550563 . 0.3617021276595745)))))
+ '(ecb-layout-window-sizes nil)
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
- '(ecb-show-sources-in-directories-buffer (quote ("left7" "left13" "left14" "left15" "fav2" "code4" "code")))
- '(ecb-source-path (quote ("/Users/hemant/checkout/solaro" "/Users/hemant/rails_yard/actively")))
+ '(ecb-show-sources-in-directories-buffer
+   (quote
+    ("left7" "left13" "left14" "left15" "fav2" "code4" "code")))
+ '(ecb-source-path
+   (quote
+    ("/Users/hemant/checkout/solaro" "/Users/hemant/rails_yard/actively")))
  '(ecb-tip-of-the-day nil)
  '(fill-column 100)
  '(js2-bounce-indent-p t)
@@ -126,8 +133,13 @@
 ;;  '(ac-selection-face ((t (:background "salmon" :foreground "black")))))
 (put 'upcase-region 'disabled nil)
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- )
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "White" :foreground "Black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "Monaco")))))
+
+(set-default buffer-file-coding-system 'utf-8-unix)
+(set-default-coding-systems 'utf-8-unix)
+(prefer-coding-system 'utf-8-unix)
+(set-default default-buffer-file-coding-system 'utf-8-unix)

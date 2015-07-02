@@ -23,7 +23,7 @@
 ;; GNU Emacs; see the file COPYING.  If not, write to the Free Software
 ;; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-;; $Id: ecb-create-layout.el,v 1.36 2009/05/15 16:40:05 berndl Exp $
+;; $Id$
 
 ;;; Commentary:
 ;;
@@ -52,7 +52,7 @@
 (silentcomp-defvar vertical-divider-map)
 (silentcomp-defvar modeline-map)
 ;; Emacs 21.X stuff
-(silentcomp-defvar automatic-hscrolling)
+(silentcomp-defvar auto-hscroll-mode)
 (silentcomp-defvar before-make-frame-hook)
 (silentcomp-defvar after-make-frame-functions)
 ;; First loaded during activated ECB
@@ -68,12 +68,12 @@
   :group 'ecb-create-layout
   :type 'file)
 
-(defcustom ecb-create-layout-frame-width 110
+(defcustom ecb-create-layout-frame-width 140
   "*Frame width of the layout creation frame."
   :group 'ecb-create-layout
   :type 'integer)
 
-(defcustom ecb-create-layout-frame-height 42
+(defcustom ecb-create-layout-frame-height 51
   "*Frame height of the layout creation frame."
   :group 'ecb-create-layout
   :type 'integer)
@@ -85,7 +85,7 @@
 (defconst ecb-create-layout-buf-prefix " *ECB-LC-")
 (defconst ecb-create-layout-frame-name "Creation of a new ECB-layout")
 (defconst ecb-create-layout-all-buf-types
-  '("directories" "history" "methods" "sources" "speedbar" "analyse"))
+  '("directories" "history" "methods" "sources" "speedbar" "analyse" "symboldef"))
 
 (defconst ecb-create-layout-help-text-left-right
   "
@@ -260,9 +260,9 @@ other other frame!"
   "Cancel layout-creation without saving the layout."
   (interactive)
   (when (ecb-create-layout-frame-ok)
-    (ecb-create-layout-clear-all (interactive-p))
+    (ecb-create-layout-clear-all (ecb-interactive-p))
     (message "ECB Layout Creation canceled - the layout is not saved!")
-    (and (interactive-p) (ecb-activate))))
+    (and (ecb-interactive-p) (ecb-activate))))
 
 (defun ecb-create-layout-clear-all (&optional delete-frame)
   "Resets all stuff to state before `ecb-create-new-layout' was called. If
@@ -285,7 +285,7 @@ DELETE-FRAME is not nil then the new created frame will be deleted and the
             ecb-create-layout-old-minor-mode-map-alist))
   ;; restore horiz. scrolling
   (unless ecb-running-xemacs
-    (setq automatic-hscrolling ecb-create-layout-old-hscroll))
+    (setq auto-hscroll-mode ecb-create-layout-old-hscroll))
   ;; for XEmacs restore these maps
   (if ecb-running-xemacs
       (progn
@@ -313,7 +313,7 @@ DELETE-FRAME is not nil then the new created frame will be deleted and the
   (interactive)
   (when (ecb-create-layout-frame-ok)
     (if (ecb-create-layout-ready-for-save-p)
-        (let ((delete-frame (interactive-p)))
+        (let ((delete-frame (ecb-interactive-p)))
           ;; if an error occurs during `ecb-create-layout-save-layout' or the
           ;; user hits C-q we must clean the layout creation stuff!
           (unwind-protect
@@ -344,7 +344,7 @@ DELETE-FRAME is not nil then the new created frame will be deleted and the
 
 (defun ecb-create-layout-insert-file-header ()
   (insert (format ";;; %s --- user defined ECB-layouts" ;;
-                  (file-name-nondirectory ecb-create-layout-file)))
+                  (ecb-file-name-nondirectory ecb-create-layout-file)))
   (insert ecb-create-layout-file-header))
 
 (defun ecb-create-layout-save-layout ()
@@ -465,7 +465,7 @@ DELETE-FRAME is not nil then the new created frame will be deleted and the
                          (concat "ECB " new-type) nil t)
       ;; setting the new buffer type in the buffer itself
       (ecb-create-layout-set-buffer-type new-type)
-      (when (interactive-p)
+      (when (ecb-interactive-p)
         (ecb-create-layout-gen-lisp-for-buffer-type new-type)
         (ecb-create-layout-next-window))
       new-type)))
@@ -783,8 +783,8 @@ never selects the edit-window."
 
   ;; horiz. scrolling
   (unless ecb-running-xemacs
-    (setq ecb-create-layout-old-hscroll automatic-hscrolling)
-    (setq automatic-hscrolling nil))
+    (setq ecb-create-layout-old-hscroll auto-hscroll-mode)
+    (setq auto-hscroll-mode nil))
 
   ;; for XEmacs modeline- and vertical-divider maps
   (when ecb-running-xemacs

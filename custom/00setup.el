@@ -33,7 +33,7 @@
 (setq x-select-enable-clipboard t)
 
 (setq x-select-enable-clipboard t)	; as above
-(setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
+;; (setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
 (global-set-key [f2] 'comment-region)
 (global-set-key [f3] 'uncomment-region)

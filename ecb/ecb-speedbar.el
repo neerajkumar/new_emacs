@@ -24,7 +24,7 @@
 ;; GNU Emacs; see the file COPYING.  If not, write to the Free Software
 ;; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-;; $Id: ecb-speedbar.el,v 1.73 2009/05/08 14:05:55 berndl Exp $
+;; $Id$
 
 ;;; Commentary:
 
@@ -64,10 +64,11 @@
 (eval-when-compile
   (require 'silentcomp))
 
-(require 'speedbar)
 (require 'ecb-util)
 (require 'ecb-cedet-wrapper)
+(ecb-cedet-require 'speedbar)
 (require 'ecb-common-browser)
+(require 'ecb-layout)
 
 (eval-when-compile
   ;; to avoid compiler grips
@@ -174,7 +175,7 @@ could slow down dramatically!"
   "Name of the ECB speedbar buffer.")
 
 (defun ecb-speedbar-buffer-selected ()
-  (equal (current-buffer) (get-buffer ecb-speedbar-buffer-name)))
+  (equal (current-buffer) (ecb-buffer-obj ecb-speedbar-buffer-name)))
 
 (defecb-advice speedbar-click around ecb-speedbar-adviced-functions
   "Makes the function compatible with ECB. If ECB is active and the window of
@@ -202,7 +203,7 @@ after clicking onto a filename in the speedbar."
 (defecb-advice speedbar-frame-mode around ecb-speedbar-adviced-functions
   "During running speedbar within ECB this command is disabled!"
   (if ecb-minor-mode
-      (when (interactive-p)
+      (when (ecb-interactive-p)
         (ecb-info-message "speedbar-frame-mode takes no effect when running within ECB!"))
     ad-do-it))
 
@@ -264,13 +265,15 @@ the point was not set by `mouse-set-point'."
     (and (window-live-p (get-buffer-window ecb-speedbar-buffer-name))
          (select-window (get-buffer-window ecb-speedbar-buffer-name)))))
 
-(defun ecb-speedbar-set-buffer()
-  "Set the speedbar buffer within ECB."
+(defecb-window-dedicator-to-ecb-buffer ecb-set-speedbar-buffer
+    ecb-speedbar-buffer-name nil
+  "Display in current window the speedbar-buffer and make window dedicated."
   (ecb-speedbar-activate)
   (set-window-buffer (selected-window)
                      (get-buffer-create ecb-speedbar-buffer-name))
   (unless ecb-running-xemacs
-    (set (make-local-variable 'automatic-hscrolling) nil)))
+    (set (make-local-variable 'auto-hscroll-mode) nil)))
+
 
 
 (defvar ecb-speedbar-verbosity-level-old nil)
@@ -395,7 +398,7 @@ future this could break."
 
 (defun ecb-speedbar-active-p ()
   "Return not nil if speedbar is active and integrated in the `ecb-frame'."
-  (and (get-buffer ecb-speedbar-buffer-name)
+  (and (ecb-buffer-obj ecb-speedbar-buffer-name)
        (get-buffer-window (get-buffer ecb-speedbar-buffer-name) ecb-frame)))
 
 (defun ecb-speedbar-update-contents ()
@@ -407,8 +410,7 @@ future this could break."
     ecb-speedbar-buffer-name ecb-speedbar-buffer-sync t
   "Update the speedbar so that it's synced up with the current file."
   (let ((speedbar-default-directory
-         (save-excursion
-           (set-buffer visible-buffer)
+         (with-current-buffer visible-buffer
            (ecb-fix-filename default-directory)))
         (ecb-default-directory (ecb-fix-filename default-directory)))
     (when (and (or (not (ecb-string= speedbar-default-directory
@@ -442,6 +444,14 @@ speedbar-window is not visible within the ECB-frame."
 ;; semantic-grammar available) but which can be parsed by imenu and/or etags
 ;; via speedbar.
 
+(defun ecb-speedbar-decorate-tag (tag face)
+  "Set given face to tag's text & return decorated text"
+  (let* ((txt-tmp (car tag))
+	 (txt (when (stringp txt-tmp) (substring txt-tmp 0))))
+    (when txt
+      (set-text-properties 0 (length txt) `(face ,face) txt))
+    txt))
+
 (defun ecb-speedbar-sb-tag-p (tag)
   "Return not nil if TAG is a semantic-tag generated from a speedbar tag."
   (ecb--semantic--tag-get-property tag 'ecb-speedbar-tag))
@@ -473,11 +483,7 @@ Return NODE."
          (ecb--semantic--tag-put-property new-tag 'ecb-speedbar-tag t)
          (ecb-apply-user-filter-to-tags (list new-tag))
          (when (not (ecb-tag-forbidden-display-p new-tag))
-           (tree-node-new (progn
-                            (set-text-properties
-                             0 (length (car tag))
-                             `(face ,ecb-method-non-semantic-face) (car tag))
-                            (car tag))
+           (tree-node-new (ecb-speedbar-decorate-tag tag ecb-method-non-semantic-face)
                           0
                           new-tag
                           t
@@ -493,11 +499,7 @@ Return NODE."
          (when (not (ecb-tag-forbidden-display-p new-tag))             
            (ecb-create-non-semantic-tree
             (setq new-node
-                  (tree-node-new (progn
-                                   (set-text-properties
-                                    0 (length (car tag))
-                                    `(face ,ecb-method-non-semantic-face) (car tag))
-                                   (car tag))
+                  (tree-node-new (ecb-speedbar-decorate-tag tag ecb-method-non-semantic-face)
                                  0
                                  new-tag
                                  nil node))
@@ -508,11 +510,7 @@ Return NODE."
         (speedbar-generic-list-group
          (ecb-create-non-semantic-tree
           (setq new-node
-                (tree-node-new (progn
-                                 (set-text-properties
-                                  0 (length (car tag))
-                                  `(face ,ecb-method-non-semantic-face) (car tag))
-                                 (car tag))
+                (tree-node-new (ecb-speedbar-decorate-tag tag ecb-method-non-semantic-face)
                                1
                                nil nil node))
           (cdr tag))

@@ -1,15 +1,12 @@
 # This Makefile byte-compiles the ECB lisp files and generates online-help.
 
-# Copyright (C) 2000 - 2005 Jesper Nordenberg,
+# Copyright (C) 2000 - 2010 Jesper Nordenberg,
 #                           Klaus Berndl,
-#                           Kevin A. Burton,
 #                           Free Software Foundation, Inc.
 
 # Author: Jesper Nordenberg <mayhem@home.se>
 #         Klaus Berndl <klaus.berndl@sdm.de>
-#         Kevin A. Burton <burton@openprivacy.org>
 # Maintainer: Klaus Berndl <klaus.berndl@sdm.de>
-#             Kevin A. Burton <burton@openprivacy.org>
 # Keywords: browser, code, programming, tools
 # Created: 2001
 
@@ -26,113 +23,65 @@
 # GNU Emacs; see the file COPYING.  If not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-# $Id: Makefile,v 1.114 2009/05/15 15:19:53 berndl Exp $
+# $Id$
 
+SHELL = /bin/bash
 
-# ========================================================================
-# User configurable section
+PLATFORM=$(shell uname -s)
 
-# ------------------------------------------------------------------------
-# Byte-compiling ECB:
-# ------------------------------------------------------------------------
-
-# Define here the correct path to your Emacs or XEmacs binary. Ensure you
-# have set this variable to 'xemacs' if you want byte-compile with XEmacs!
-EMACS=emacs
-
-# In the following path-settings of this section use always FORWARD-SLASHES
-# as directory-separator even with MS Windows systems.
-
-# -------- Compiling ECB with the cedet-library 1.0 ----------------------
-
-# cedet >= 1.0 (contains a.o. semantic >= 2.0, eieio >= 0.18 and speedbar
-# >= 0.15). Set here the full path to the cedet-installation directory.
-
-CEDET=c:/Programme/emacs-22.3/site-lisp/package-development/cedet
-
-# You can set here more load-paths to arbitrary packages if you want. But
-# this is really not necessary!
-LOADPATH=
-
-# Two ways to build ECB:
-# - Call "make" to byte-compile the ECB. You can savely ignore the messages.
-# - Or call
 #
-#      make EMACS="path/to/emacs"
+# Override vars in Makefile.conf if needed
 #
-#      or
-#
-#      make CEDET="path/to/cedet"
-#
-#   if you want to set either different load-paths or Emacs-binary and
-#   you do not want edit the Makefile. Do not forget quoting the arguments
-#   if they contain spaces!
-#
-# If there are any warning messages during byte-compilation (normally there
-# are not any) you can savely ignore them!
+-include Makefile.conf
 
+ifeq ($(wildcard Makefile.conf),)
+$(warning Makefile.conf not found. Using defaults for $(PLATFORM)!)
+$(warning Create Makefile.conf from Makefile.conf.template to override the defaults.)
+endif
 
-# ------------------------------------------------------------------------
-# Generating different online-help formats
-# ------------------------------------------------------------------------
+# When run inside Emacs, the variable contains 't', so correct it
+ifeq ($(origin EMACS),environment)
+	EMACS = emacs
+endif
 
-# If you want to generate all formats of online-help from the texi-source
-# you must set here the FULL paths to the required tools. The Makefile
-# tests if the tools are available on these locations, so if a tool x is
-# not available let the related setting X empty! NOTE: For generating the
-# PDF-format you will need an installed TeX and Ghostscript!
-MAKEINFO=/usr/bin/makeinfo
-TEXI2DVI=/C/Programme/texmf/miktex/bin/texi2dvi
-# You need either the dvipdfm-tool
-#DVIPDFM=/C/Programme/texmf/miktex/bin/dvipdfm
-DVIPDFM=
-# or the tools dvips and ps2pdf. If dvipdfm is available the Makefile uses
-# this one!
-DVIPS=/C/Programme/texmf/miktex/bin/dvips
-PS2PDF=/C/home/bin/ps2pdf
+EMACS ?= emacs
 
-# To generate the online-formats just call "make online-help" for info- and
-# HTML-format and "make pdf" for PDF-format.
-
-# ------------------------------------------------------------------------
-# Installing the info online-help in the Top-directory of (X)Emacs-info
-# ------------------------------------------------------------------------
-
-# Set here the path of the info subdirectory of your (X)Emacs installation
-# which contains the dir file.
-EMACSINFOPATH=/C/Programme/emacs-22.3/info
-
-# If you want to install the info-format of the online-help in the
-# Top-directory of the info-directory of (X)Emacs (see above EMACSINFOPATH)
-# then you must specify the full path of the tool install-info.
-INSTALLINFO=/usr/bin/install-info
-
-# To install the online-help just call "make install-help"
-
-# end of user configurable section
-# ========================================================================
-
-
-# ========================================================================
-# !!!!!!!!!!!!!!!!!!!!! Do not change anything below !!!!!!!!!!!!!!!!!!!!!
-# ========================================================================
-
-
-# $Id: Makefile,v 1.114 2009/05/15 15:19:53 berndl Exp $
+# If it's one of Linux, Cygwin, or Darwin, use defaults.
+ifneq ($(filter Linux CYGWIN% Darwin, $(PLATFORM)),)
+	EMACS ?= emacs
+	CEDET ?=
+	LOADPATH ?=
+	MAKEINFO ?= makeinfo
+	TEXI2PDF ?= texi2pdf
+	TEXI2DVI ?= texi2dvi
+	DVIPDFM ?= dvipdf
+	DVIPS ?= dvips
+	PS2PDF ?= ps2pdf
+	EMACSINFOPATH ?=
+	INSTALLINFO ?= install-info
+endif
 
 # For the ECB-maintainers: Change the version-number here and not
 # elsewhere!
-ecb_VERSION=2.40
-#ecb_VERSION=2.32
+ecb_VERSION=2.41
 
 include ecb-makedef.mk
+
+all: ecb autoloads online-help
 
 ecb: $(ecb_LISP_EL)
 	@echo "Byte-compiling ECB with LOADPATH=${LOADPATH} ..."
 	@$(RM) $(ecb_LISP_ELC) ecb-compile-script
 	@echo "(add-to-list 'load-path nil)" > ecb-compile-script
 	@if test ! -z "${CEDET}"; then\
-	   echo "(load-file \"$(CEDET)/common/cedet.el\")" >> ecb-compile-script; \
+		if test -f $(CEDET)/cedet-devel-load.el ; then \
+		   echo "(load-file \"$(CEDET)/cedet-devel-load.el\")" >> ecb-compile-script; \
+		else \
+		   echo "(load-file \"$(CEDET)/common/cedet.el\")" >> ecb-compile-script; \
+		fi \
+	else \
+	   echo "(semantic-mode 1)" >> ecb-compile-script; \
+	   echo "(require 'semantic/bovine/el)" >> ecb-compile-script; \
 	fi
 	@if test ! -z "${LOADPATH}"; then\
 	   for loadpath in ${LOADPATH}; do \
@@ -144,10 +93,8 @@ ecb: $(ecb_LISP_EL)
 	$(EBATCH) -l ecb-compile-script --eval '(ecb-byte-compile t)'
 	@$(RM) ecb-compile-script
 
-all: ecb online-help
-
 online-help: $(ecb_TEXI)
-	@if test -x "$(MAKEINFO)"; then\
+	@if command -v "$(MAKEINFO)" >/dev/null 2>&1 ; then\
 	   $(RM) -R $(ecb_INFO_DIR) $(ecb_HTML_DIR); \
 	   $(MKDIR) $(ecb_INFO_DIR) $(ecb_HTML_DIR); \
 	   echo Generating info-format...; \
@@ -168,13 +115,17 @@ online-help: $(ecb_TEXI)
 	fi
 
 pdf: $(ecb_TEXI)
-	@if test -x "$(TEXI2DVI)" -a -x "$(DVIPDFM)"; then\
+	@if command -v "$(TEXI2PDF)" >/dev/null 2>&1; then\
+	   $(RM) $(ecb_PDF); \
+	   echo Generating pdf-format with texi2pdf ...; \
+	   $(TEXI2PDF) --clean $<; \
+	elif command -v "$(TEXI2DVI)" >/dev/null 2>&1 -a command -v "$(DVIPDFM)" >/dev/null 2>&1; then\
 	   $(RM) $(ecb_DVI) $(ecb_PDF); \
 	   echo Generating pdf-format with dvipdfm ...; \
 	   $(TEXI2DVI) --clean $<; \
 	   $(DVIPDFM) $(ecb_DVI); \
 	   $(RM) $(ecb_DVI); \
-	elif test -x "$(TEXI2DVI)" -a -x "$(DVIPS)" -a -x "$(PS2PDF)"; then\
+	elif command -v "$(TEXI2DVI)" >/dev/null 2>&1 -a command -v "$(DVIPS)" >/dev/null 2>&1 -a command -v "$(PS2PDF)" >/dev/null 2>&1; then\
 	   $(RM) $(ecb_DVI) $(ecb_PS) $(ecb_PDF); \
 	   echo Generating pdf-format with dvips and ps2pdf ...; \
 	   $(TEXI2DVI) --quiet --clean $<; \
@@ -183,6 +134,7 @@ pdf: $(ecb_TEXI)
 	   $(RM) $(ecb_DVI) $(ecb_PS); \
 	else \
 	   echo No pdf-format generating because at least one of the tools; \
+	   echo - texi2pdf in $(TEXI2PDF); \
 	   echo - texi2dvi in $(TEXI2DVI); \
 	   echo - dvips in $(DVIPS); \
 	   echo - ps2pdf in $(PS2PDF); \
@@ -191,7 +143,7 @@ pdf: $(ecb_TEXI)
 
 
 install-help: $(ecb_INFO_DIR)/$(ecb_INFO)
-	@if test -x "$(INSTALLINFO)" -a -f "$(EMACSINFOPATH)/dir"; then\
+	@if command -v "$(INSTALLINFO)" >/dev/null 2>&1 -a -f "$(EMACSINFOPATH)/dir"; then\
 	   echo Installing the Online-help in $(EMACSINFOPATH)...; \
 	   $(CP) $(ecb_INFO_DIR)/*info* $(EMACSINFOPATH); \
 	   $(INSTALLINFO) $< $(EMACSINFOPATH)/dir; \
@@ -204,7 +156,7 @@ install-help: $(ecb_INFO_DIR)/$(ecb_INFO)
 
 
 clean:
-	@$(RM) $(ecb_LISP_ELC) ecb-compile-script
+	@$(RM) $(ecb_LISP_ELC) ecb-compile-script ecb-autoloads.el*
 
 # The targets below are only for maintaining the ECB-package.
 
@@ -233,11 +185,9 @@ prepversion:
 	  echo "w";				\
 	  echo "q") | ed -s $(ecb_TEXI) 1> /dev/null
 
-
-autoloads:
+autoloads: ecb
 	@$(RM) $(ecb_AUTOLOADS) $(ecb_AUTOLOADS)c
-	$(EBATCH) -l ecb-autogen -f ecb-update-autoloads
-
+	$(EBATCH) --eval "(add-to-list 'load-path nil)" -l ecb-autogen -f ecb-update-autoloads
 
 # builds the distribution file $(ecb_VERSION).tar.gz
 distrib: $(ecb_INFO_DIR)/$(ecb_INFO) prepversion autoloads ecb
@@ -253,5 +203,20 @@ distrib: $(ecb_INFO_DIR)/$(ecb_INFO) prepversion autoloads ecb
 	@find ecb-$(ecb_VERSION)/$(ecb_IMAGE_DIR) -name *.png -print | xargs $(RM)
 	@tar -cvzf ecb-$(ecb_VERSION).tar.gz ecb-$(ecb_VERSION)
 	@$(RM) -R ecb-$(ecb_VERSION)
+
+printconf:
+	@echo Platform: $(PLATFORM)
+	@echo ECB version: $(ecb_VERSION)
+	@echo Emacs: $(EMACS)
+	@if test -n "${CEDET}"; then echo "CEDET: ${CEDET}"; else echo "CEDET: Emacs-builtin"; fi
+	@echo Load path: $(LOADPATH)
+	@echo Emacs info path: $(EMACSINFOPATH)
+	@echo command -v "${INSTALLINFO}" >/dev/null 2>&1 && echo "install-info: ${INSTALLINFO}" || echo "install-info: cannot execute ${INSTALLINFO}"
+	@echo command -v "${MAKEINFO}" >/dev/null 2>&1 && echo "makeinfo: ${MAKEINFO}" || echo "makeinfo: cannot execute ${MAKEINFO}"
+	@echo command -v "${TEXI2PDF}" >/dev/null 2>&1 && echo "texi2pdf: ${TEXI2PDF}" || echo "texi2pdf: cannot execute ${TEXI2PDF}"
+	@echo command -v "${TEXI2DVI}" >/dev/null 2>&1 && echo "texi2dvi: ${TEXI2DVI}" || echo "texi2dvi: cannot execute ${TEXI2DVI}"
+	@echo command -v "${DVIPDFM}" >/dev/null 2>&1 && echo "dvipdfm: ${DVIPDFM}" || echo "dvipdfm: cannot execute ${DVIPDFM}"
+	@echo command -v "${DVIPS}" >/dev/null 2>&1 && echo "dvips: ${DVIPS}" || echo "dvips: cannot execute ${DVIPS}"
+	@echo command -v "${PS2PDF}" >/dev/null 2>&1 && echo "ps2pdf: ${PS2PDF}" || echo "ps2pdf: cannot execute ${PS2PDF}"
 
 # End of Makefile
