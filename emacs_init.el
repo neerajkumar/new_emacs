@@ -62,7 +62,9 @@
 (load "24scss.el")
 ;;(load "25json.el")
 (load "rtf-mode.el")
+(load "quickrun.el")
 
+(require 'quickrun)
 (require 'ack)
 (require 'feature-mode)
 (require 'rspec-mode)
