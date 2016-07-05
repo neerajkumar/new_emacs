@@ -31,6 +31,8 @@
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
 (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
+;; (add-to-list 'yas-snippet-dirs "~/new_emacs/angularjs-mode/snippets")
+
 (load "load_vars.el")
 (load "00setup.el")
 (load "01org-mode.el")
@@ -79,6 +81,9 @@
 (require 'hide-comnt)
 
 (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
+(add-to-list 'ac-dictionary-directories "~/new_emacs/angularjs-mode/ac-dict")
+(add-to-list 'ac-modes 'angular-mode)
+(add-to-list 'ac-modes 'angular-html-mode)
 
 ;;(autoload 'js2-mode "js2" nil t)
 
@@ -163,3 +168,8 @@
 (set-default-coding-systems 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
 (set-default default-buffer-file-coding-system 'utf-8-unix)
+
+(add-hook 'ruby-mode-hook
+          (lambda ()
+            (define-key ruby-mode-map "{" nil)
+            (define-key ruby-mode-map "}" nil)))
