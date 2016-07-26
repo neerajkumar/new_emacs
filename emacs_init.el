@@ -26,6 +26,7 @@
 (require 'sws-mode)
 (require 'jade-mode)    
 (require 'tail)
+(require 'jsx-mode)
 (autoload 'tail-file "~/new_emacs/tail.el" "Tail a file." t)
 (autoload 'tail-command "~/new_emacs/tail.el" "Tail a file with arguments." t)
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
