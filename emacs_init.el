@@ -26,12 +26,12 @@
 (require 'sws-mode)
 (require 'jade-mode)    
 (require 'tail)
-(require 'jsx-mode)
 (autoload 'tail-file "~/new_emacs/tail.el" "Tail a file." t)
 (autoload 'tail-command "~/new_emacs/tail.el" "Tail a file with arguments." t)
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
 (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
-
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . jsx-mode))
+(autoload 'jsx-mode "~/new_emacs/jsx-mode/src/jsx-mode" "JSX mode" t)
 ;; (add-to-list 'yas-snippet-dirs "~/new_emacs/angularjs-mode/snippets")
 
 (load "load_vars.el")
