@@ -33,6 +33,8 @@
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . jsx-mode))
 (autoload 'jsx-mode "~/new_emacs/jsx-mode/src/jsx-mode" "JSX mode" t)
 ;; (add-to-list 'yas-snippet-dirs "~/new_emacs/angularjs-mode/snippets")
+(add-to-list 'load-path "~/new_emacs/shell-pop-el")
+(require 'shell-pop)
 
 (load "load_vars.el")
 (load "00setup.el")
@@ -122,6 +124,19 @@
 
 (tool-bar-mode)
 
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(shell-pop-default-directory "/Users/neerajkumar/git")
+ '(shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+ '(shell-pop-term-shell "/bin/zsh")
+ '(shell-pop-universal-key "C-t")
+ '(shell-pop-window-size 45)
+ '(shell-pop-full-span t)
+ '(shell-pop-window-position "right"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
