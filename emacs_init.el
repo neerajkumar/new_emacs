@@ -16,6 +16,8 @@
 (add-to-list 'load-path "~/new_emacs/rvm.el/")
 (add-to-list 'load-path "~/new_emacs/cucumber/")
 (add-to-list 'load-path "~/new_emacs/rspec-mode/")
+(add-to-list 'load-path "~/new_emacs/pcre2el/")
+(add-to-list 'load-path "~/new_emacs/ruby-test-mode/")
 (add-to-list 'load-path "~/new_emacs/json-mode/")
 (add-to-list 'load-path "~/new_emacs/coffee-mode/")
 (add-to-list 'load-path "~/new_emacs/sass-mode/")
@@ -117,7 +119,7 @@
 ;;(load "17rsense.el")
 
 ;;(rvm-use-default)
-(rvm-use "ruby-2.0.0-p451" "global") 
+(rvm-use "ruby-2.3.1" "global") 
 (toggle-debug-on-error)
 
 (server-start)
@@ -189,3 +191,23 @@
           (lambda ()
             (define-key ruby-mode-map "{" nil)
             (define-key ruby-mode-map "}" nil)))
+
+(require 'ruby-test-mode)
+(setq package-list '(better-defaults
+                     solarized-theme
+                     helm-projectile
+                     helm-ag
+                     ruby-electric
+                     seeing-is-believing
+                     chruby
+                     inf-ruby
+                     ruby-test-mode))
+;;...
+(add-hook 'ruby-mode-hook 'ruby-test-mode)
+(add-hook 'compilation-finish-functions
+          (lambda (buf strg)
+            (switch-to-buffer-other-window "*compilation*")
+            (read-only-mode)
+            (goto-char (point-max))
+            (local-set-key (kbd "q")
+                           (lambda () (interactive) (quit-restore-window)))))
