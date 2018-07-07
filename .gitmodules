@@ -1,3 +1,6 @@
 [submodule "sass-mode"]
 	path = sass-mode
 	url = git://github.com/nex3/sass-mode.git
+[submodule "ruby-test-mode"]
+	path = ruby-test-mode
+	url = git@github.com:r0man/ruby-test-mode.git
