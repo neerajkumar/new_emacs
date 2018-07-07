@@ -4,3 +4,21 @@
 [submodule "ruby-test-mode"]
 	path = ruby-test-mode
 	url = git@github.com:r0man/ruby-test-mode.git
+[submodule "angularjs-mode"]
+	path = angularjs-mode
+	url = git@github.com:rudolfolah/angularjs-mode.git
+[submodule "pcre2el"]
+	path = pcre2el
+	url = git@github.com:joddie/pcre2el.git
+[submodule "shell-pop-el"]
+	path = shell-pop-el
+	url = git@github.com:kyagi/shell-pop-el.git
+[submodule "el-get"]
+	path = el-get
+	url = git@github.com:dimitri/el-get.git
+[submodule "js2-mode"]
+	path = js2-mode
+	url = git@github.com:mooz/js2-mode.git
+[submodule "jsx-mode.el"]
+	path = jsx-mode.el
+	url = git@github.com:jsx/jsx-mode.el.git
