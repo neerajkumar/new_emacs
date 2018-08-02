@@ -119,7 +119,7 @@
 ;;(load "17rsense.el")
 
 ;;(rvm-use-default)
-(rvm-use "ruby-2.3.1" "global") 
+(rvm-use "ruby-2.5.0" "global") 
 (toggle-debug-on-error)
 
 (server-start)
