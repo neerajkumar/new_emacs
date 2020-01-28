@@ -12,7 +12,6 @@
 (add-to-list 'load-path "~/new_emacs/scala-mode")
 (add-to-list 'load-path "~/new_emacs/markdown-mode/")
 (add-to-list 'load-path "~/new_emacs/color-theme/")
-(add-to-list 'load-path "~/new_emacs/auto_complete_install")
 (add-to-list 'load-path "~/new_emacs/rvm.el/")
 (add-to-list 'load-path "~/new_emacs/cucumber/")
 (add-to-list 'load-path "~/new_emacs/rspec-mode/")
@@ -25,6 +24,9 @@
 (add-to-list 'load-path "~/new_emacs/nodejs-repl.el/")
 (add-to-list 'load-path "~/new_emacs/jade-mode/")
 (add-to-list 'load-path "~/new_emacs/cedet-1.1/")
+(add-to-list 'load-path "~/new_emacs/jsx-mode.el/")
+(add-to-list 'load-path "~/new_emacs/rjsx-mode/")
+(add-to-list 'load-path "~/new_emacs/js2-mode/")
 (require 'sws-mode)
 (require 'jade-mode)    
 (require 'tail)
@@ -34,9 +36,36 @@
 (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . jsx-mode))
 (autoload 'jsx-mode "~/new_emacs/jsx-mode/src/jsx-mode" "JSX mode" t)
+(autoload 'rjsx-mode "~/new_emacs/rjsx-mode/rjsx-mode.el" "RJSX mode" t)
 ;; (add-to-list 'yas-snippet-dirs "~/new_emacs/angularjs-mode/snippets")
 (add-to-list 'load-path "~/new_emacs/shell-pop-el")
+(add-to-list 'load-path "~/new_emacs/js2-mode")
 (require 'shell-pop)
+(require 'js2-mode)
+;;(require 'jsx-mode)
+(require 'rjsx-mode)
+
+(require 'package)
+
+;; If you want to use latest version
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
+
+;; If you want to use last tagged version
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+(package-initialize)
+
+(require 'auto-complete)
+
+(add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/new_emacs/angularjs-mode/ac-dict")
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/elpa/auto-complete-20170125.245/dict")
+(ac-config-default)
+(add-to-list 'ac-modes 'angular-mode)
+(add-to-list 'ac-modes 'angular-html-mode)
+(add-to-list 'ac-modes 'auto-complete-mode)
+
 
 (load "load_vars.el")
 (load "00setup.el")
@@ -53,14 +82,13 @@
 (load "07rails.el")
 (load "08ido-mode.el")
 (load "09bm.el")
-(load "10cedet.el")
+;;(load "10cedet.el")
 (load "11ecb.el")
 (load "12auto-install.el")
 (load "13enable-yas-mode.el")
 (load "14scala-mode.el")
 (load "15markdown.el")
 (load "16color-theme.el")
-(load "18auto-complete.el")
 (load "19haml-mode.el")
 (load "20rvm.el")
 (load "21coffee.el")
@@ -119,26 +147,15 @@
 ;;(load "17rsense.el")
 
 ;;(rvm-use-default)
-(rvm-use "ruby-2.5.0" "global") 
+;;(rvm-use "ruby-2.5.1" "global")
+(rvm-use "ruby-2.4.6" "global")
 (toggle-debug-on-error)
+(setq debug-on-error nil)
 
 (server-start)
 
 (tool-bar-mode)
 
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(shell-pop-default-directory "/Users/neerajkumar/git")
- '(shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
- '(shell-pop-term-shell "/bin/zsh")
- '(shell-pop-universal-key "C-t")
- '(shell-pop-window-size 45)
- '(shell-pop-full-span t)
- '(shell-pop-window-position "right"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -163,7 +180,19 @@
  '(ecb-tip-of-the-day nil)
  '(fill-column 100)
  '(js2-bounce-indent-p t)
+ '(package-selected-packages (quote (auto-complete)))
  '(rng-nxml-auto-validate-flag nil)
+ '(shell-pop-default-directory "/Users/neerajkumar/git")
+ '(shell-pop-full-span t)
+ '(shell-pop-shell-type
+   (quote
+    ("ansi-term" "*ansi-term*"
+     (lambda nil
+       (ansi-term shell-pop-term-shell)))))
+ '(shell-pop-term-shell "/bin/zsh")
+ '(shell-pop-universal-key "C-t")
+ '(shell-pop-window-position "right")
+ '(shell-pop-window-size 45)
  '(show-paren-mode t)
  '(transient-mark-mode t))
 
@@ -185,7 +214,7 @@
 (set-default buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
-(set-default default-buffer-file-coding-system 'utf-8-unix)
+; (set-default default-buffer-file-coding-system 'utf-8-unix)
 
 (add-hook 'ruby-mode-hook
           (lambda ()
@@ -211,3 +240,4 @@
             (goto-char (point-max))
             (local-set-key (kbd "q")
                            (lambda () (interactive) (quit-restore-window)))))
+(setq enh-ruby-deep-indent-paren nil)
