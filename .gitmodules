@@ -22,3 +22,6 @@
 [submodule "jsx-mode.el"]
 	path = jsx-mode.el
 	url = git@github.com:jsx/jsx-mode.el.git
+[submodule "rjsx-mode"]
+	path = rjsx-mode
+	url = git@github.com:felipeochoa/rjsx-mode.git
