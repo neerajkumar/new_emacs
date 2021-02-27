@@ -25,3 +25,9 @@
 [submodule "rjsx-mode"]
 	path = rjsx-mode
 	url = git@github.com:felipeochoa/rjsx-mode.git
+[submodule "emacs-slim"]
+	path = emacs-slim
+	url = git@github.com:slim-template/emacs-slim.git
+[submodule "rvm.el"]
+	path = rvm.el
+	url = git@github.com:senny/rvm.el.git

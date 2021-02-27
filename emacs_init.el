@@ -27,9 +27,12 @@
 (add-to-list 'load-path "~/new_emacs/jsx-mode.el/")
 (add-to-list 'load-path "~/new_emacs/rjsx-mode/")
 (add-to-list 'load-path "~/new_emacs/js2-mode/")
+(add-to-list 'load-path "~/new_emacs/emacs-slim/")
+
 (require 'sws-mode)
 (require 'jade-mode)    
 (require 'tail)
+
 (autoload 'tail-file "~/new_emacs/tail.el" "Tail a file." t)
 (autoload 'tail-command "~/new_emacs/tail.el" "Tail a file with arguments." t)
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
@@ -108,6 +111,7 @@
 (setq rspec-use-rvm t)
 (setq rspec-use-rake-flag nil)
 (setq rspec-spec-command "bundle exec rspec")
+(setq shell-file-name "zsh")
 
 (setq projectile-rails-add-keywords nil)
 
@@ -128,7 +132,6 @@
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
-
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (unless (require 'el-get nil 'noerror)
@@ -148,7 +151,7 @@
 
 ;;(rvm-use-default)
 ;;(rvm-use "ruby-2.5.1" "global")
-(rvm-use "ruby-2.4.6" "global")
+(rvm-use "ruby-2.6.6" "global")
 (toggle-debug-on-error)
 (setq debug-on-error nil)
 
