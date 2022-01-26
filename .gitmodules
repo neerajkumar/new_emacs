@@ -31,3 +31,9 @@
 [submodule "rvm.el"]
 	path = rvm.el
 	url = git@github.com:senny/rvm.el.git
+[submodule "bundler.el"]
+	path = bundler.el
+	url = git@github.com:endofunky/bundler.el.git
+[submodule "nodejs-repl.el"]
+	path = nodejs-repl.el
+	url = git@github.com:abicky/nodejs-repl.el.git

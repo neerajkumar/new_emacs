@@ -28,6 +28,8 @@
 (add-to-list 'load-path "~/new_emacs/rjsx-mode/")
 (add-to-list 'load-path "~/new_emacs/js2-mode/")
 (add-to-list 'load-path "~/new_emacs/emacs-slim/")
+(add-to-list 'load-path "~/new_emacs/bundler.el")
+(require 'bundler)
 
 (require 'sws-mode)
 (require 'jade-mode)    
